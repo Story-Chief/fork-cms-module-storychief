@@ -1,0 +1,55 @@
+{% extends '/Layout/Templates/base.html.twig' %}
+
+{% block actionbar %}
+
+{% endblock %}
+
+{% block content %}
+    {% form settings %}
+    <div class="row fork-module-content">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ 'lbl.ConnectionSettings'|trans|ucfirst }}
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="apiKey" class="control-label">{{ 'lbl.APIKey'|trans|ucfirst }}</label>
+                        {% form_field api_key %} {% form_field_error api_key %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row fork-module-content">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ 'lbl.LanguageSettings'|trans|ucfirst }}
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="language" class="control-label">{{ 'lbl.language'|trans|ucfirst }}</label>
+                        {% form_field language %} {% form_field_error language %}
+                        <span class="help-block">{{ 'msg.languageHelp'|trans }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row fork-module-actions">
+        <div class="col-md-12">
+            <div class="btn-toolbar">
+                <div class="btn-group pull-right" role="group">
+                    <button id="save" type="submit" name="save" class="btn btn-primary">
+                        <span class="fa fa-floppy-o"></span>{{ 'lbl.Save'|trans|ucfirst }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endform %}
+{% endblock %}
