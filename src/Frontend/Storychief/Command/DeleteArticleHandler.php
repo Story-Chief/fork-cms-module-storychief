@@ -7,6 +7,7 @@ use Common\ModulesSettings;
 use Frontend\Modules\Storychief\Helpers\Helper as Storychief;
 use Common\Exception\RedirectException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Backend\Core\Language\Language as BL;
 
 final class DeleteArticleHandler {
 
@@ -21,6 +22,8 @@ final class DeleteArticleHandler {
 	 * @throws RedirectException
 	 */
 	public function handle(DeleteArticle $command) {
+		BL::setWorkingLanguage($this->settings->get('Storychief', 'language'));
+
 		Blog::delete([$command->payload['external_id']]);
 
 		$response = new JsonResponse(Storychief::hashData($this->settings->get('Storychief', 'api_key'), [
