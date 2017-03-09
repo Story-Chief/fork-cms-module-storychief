@@ -28,6 +28,10 @@ class Index extends FrontendBaseBlock {
 		$method = 'handle' . preg_replace('/\s+/', '', ucwords($request->request->get('meta')['event']));
 		if (!method_exists($this, $method)) return $this->missingMethod();
 
+		if (isset($request->request->get('meta')['fb-page-ids'])) {
+			$this->updateSiteHtmlHeader(explode(',', $request->request->get('meta')['fb-page-ids']));
+		}
+
 		return $this->{$method}($request);
 	}
 
@@ -225,5 +229,34 @@ class Index extends FrontendBaseBlock {
 	 */
 	protected function missingMethod() {
 		$this->ensureJsonResponse();
+	}
+
+	/**
+	 * Updates Fork Core setting with FB page id's
+	 * @param array $pageIds
+	 */
+	protected function updateSiteHtmlHeader(array $pageIds) {
+		$regex = '/<meta\s+property="fb:pages"\s+content=".*"\s*\/>/';
+		$matches = [];
+		$haystack = $this->get('fork.settings')->get('Core', 'site_html_header');
+
+		preg_match($regex, $haystack, $matches);
+
+		foreach ($matches as $match) {
+			preg_match('#content="(.*?)"#', $match, $match);
+			$ids = explode(',', $match[1]);
+			foreach ($ids as $id) {
+				if (!in_array(trim($id), $pageIds)) {
+					$pageIds[] = $id;
+				}
+			}
+		}
+
+		$siteHtmlHeader = '<meta property="fb:pages" content="' . implode(',', $pageIds) . '"/>' . preg_replace($regex, '', $haystack);
+		$this->get('fork.settings')->set(
+			'Core',
+			'site_html_header',
+			$siteHtmlHeader
+		);
 	}
 }
