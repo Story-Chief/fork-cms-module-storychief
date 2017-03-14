@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+    <name>Storychief</name>
+    <version>1.0.0</version>
+    <requirements>
+        <minimum_version>4.5.0</minimum_version>
+    </requirements>
+    <description>
+        <![CDATA[
+      Story Chief lets you push your content to different publishing channels. It has a universal editor that lets you create beautiful stories with ease, making them look as they should on all your channels and the tool measures your impact in one place.
+    ]]>
+    </description>
+    <authors>
+        <author>
+            <name><![CDATA[Gregory Claeyssens]]></name>
+            <url><![CDATA[https://storychief.io]]></url>
+        </author>
+    </authors>
+</module>

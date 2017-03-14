@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale>
+    <Backend>
+        <Storychief>
+            <item type="label" name="Storychief">
+                <translation language="nl"><![CDATA[Storychief]]></translation>
+                <translation language="en"><![CDATA[Storychief]]></translation>
+                <translation language="it"><![CDATA[Storychief]]></translation>
+                <translation language="ru"><![CDATA[Storychief]]></translation>
+                <translation language="zh"><![CDATA[Storychief]]></translation>
+                <translation language="de"><![CDATA[Storychief]]></translation>
+                <translation language="hu"><![CDATA[Storychief]]></translation>
+                <translation language="fr"><![CDATA[Storychief]]></translation>
+                <translation language="es"><![CDATA[Storychief]]></translation>
+                <translation language="uk"><![CDATA[Storychief]]></translation>
+                <translation language="lt"><![CDATA[Storychief]]></translation>
+                <translation language="sv"><![CDATA[Storychief]]></translation>
+                <translation language="el"><![CDATA[Storychief]]></translation>
+            </item>
+            <item type="label" name="ConnectionSettings">
+                <translation language="nl"><![CDATA[connectie instellingen]]></translation>
+                <translation language="en"><![CDATA[connection settings]]></translation>
+                <translation language="it"><![CDATA[]]></translation>
+                <translation language="ru"><![CDATA[]]></translation>
+                <translation language="zh"><![CDATA[]]></translation>
+                <translation language="de"><![CDATA[]]></translation>
+                <translation language="hu"><![CDATA[]]></translation>
+                <translation language="fr"><![CDATA[]]></translation>
+                <translation language="es"><![CDATA[]]></translation>
+                <translation language="uk"><![CDATA[]]></translation>
+                <translation language="lt"><![CDATA[]]></translation>
+                <translation language="sv"><![CDATA[]]></translation>
+                <translation language="el"><![CDATA[]]></translation>
+            </item>
+            <item type="label" name="LanguageSettings">
+                <translation language="nl"><![CDATA[taal instellingen]]></translation>
+                <translation language="en"><![CDATA[language settings]]></translation>
+                <translation language="it"><![CDATA[]]></translation>
+                <translation language="ru"><![CDATA[]]></translation>
+                <translation language="zh"><![CDATA[]]></translation>
+                <translation language="de"><![CDATA[]]></translation>
+                <translation language="hu"><![CDATA[]]></translation>
+                <translation language="fr"><![CDATA[]]></translation>
+                <translation language="es"><![CDATA[]]></translation>
+                <translation language="uk"><![CDATA[]]></translation>
+                <translation language="lt"><![CDATA[]]></translation>
+                <translation language="sv"><![CDATA[]]></translation>
+                <translation language="el"><![CDATA[]]></translation>
+            </item>
+            <item type="message" name="LanguageHelp">
+                <translation language="nl"><![CDATA[Kies de taal waarin je je Story Chief verhalen wil opslaan]]></translation>
+                <translation language="en"><![CDATA[Choose the language you want your Story Chief stories to be saved as]]></translation>
+            </item>
+        </Storychief>
+    </Backend>
+</locale>
