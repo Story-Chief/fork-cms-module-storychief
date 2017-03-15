@@ -2,8 +2,11 @@
 
 namespace Backend\Modules\Storychief\Installer;
 
+use Backend\Core\Engine\Model;
 use Backend\Core\Installer\ModuleInstaller;
+use Common\Exception\RedirectException;
 use Common\ModuleExtraType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Installer for the analytics module
@@ -11,6 +14,7 @@ use Common\ModuleExtraType;
 class Installer extends ModuleInstaller {
 	/**
 	 * Install the module
+	 *
 	 */
 	public function install() {
 		$this->addModule('Storychief');
@@ -47,6 +51,12 @@ class Installer extends ModuleInstaller {
 				),
 				array('extra_id' => $postId, 'position' => 'main')
 			);
+		}
+
+		// install the blog module if needed.
+		if (!Model::isModuleInstalled('Blog')) {
+			$response = new RedirectResponse(Model::createURLForAction('install_module') .'&module=Blog');
+			throw new RedirectException('', $response);
 		}
 	}
 }
