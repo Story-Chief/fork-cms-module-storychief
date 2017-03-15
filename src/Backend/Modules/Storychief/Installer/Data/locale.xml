@@ -52,5 +52,11 @@
                 <translation language="en"><![CDATA[Choose the language you want your Story Chief stories to be saved as]]></translation>
             </item>
         </Storychief>
+        <Core>
+            <item type="label" name="Storychief">
+                <translation language="nl"><![CDATA[Storychief]]></translation>
+                <translation language="en"><![CDATA[Storychief]]></translation>
+            </item>
+        </Core>
     </Backend>
 </locale>
