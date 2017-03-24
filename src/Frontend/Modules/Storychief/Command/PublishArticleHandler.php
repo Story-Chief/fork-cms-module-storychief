@@ -75,9 +75,14 @@ final class PublishArticleHandler {
 		}
 
 		// Author
-		if (isset($story['author']['data']['email']) && Users::existsEmail($story['author']['data']['email'])) {
-			$author_id = Users::getIdByEmail($story['author']['data']['email']);
+		if (isset($command->payload['author']['data']['email']) && Users::existsEmail($command->payload['author']['data']['email'])) {
+			$author_id = Users::getIdByEmail($command->payload['author']['data']['email']);
 			$item['user_id'] = $author_id;
+		}
+
+		// Meta Tags
+		if (isset($command->payload['amphtml']) && !empty($command->payload['amphtml'])) {
+			$meta['custom'] = '<link rel="amphtml" href="' . $command->payload['amphtml'] . '" />';
 		}
 
 		// Insert
