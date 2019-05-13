@@ -2,18 +2,20 @@
 
 namespace Frontend\Modules\Storychief\Command;
 
-use Common\Exception\RedirectException;
 use Common\ModulesSettings;
+use Common\Exception\RedirectException;
+use Backend\Core\Language\Language as BL;
 use Symfony\Component\Filesystem\Filesystem;
+use Backend\Core\Engine\Model as BackendModel;
 use Backend\Modules\Blog\Engine\Model as Blog;
 use Backend\Modules\Users\Engine\Model as Users;
-use Backend\Core\Language\Language as BL;
-use Backend\Core\Engine\Model as BackendModel;
-use Backend\Modules\Search\Engine\Model as BackendSearchModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Frontend\Modules\Storychief\Command\UpdateArticle;
 use Frontend\Modules\Storychief\Helpers\Helper as Storychief;
+use Backend\Modules\Search\Engine\Model as BackendSearchModel;
+use Backend\Modules\Tags\Engine\Model as BackendTagsModel;
 
-final class PublishArticleHandler
+final class UpdateArticleHandler
 {
 
 	protected $settings;
@@ -27,23 +29,35 @@ final class PublishArticleHandler
 	 * @param  PublishArticle $command
 	 * @throws RedirectException
 	 */
-	public function handle(PublishArticle $command)
+	public function handle(UpdateArticle $command)
 	{
 		BL::setWorkingLanguage($this->settings->get('Storychief', 'language'));
 
-		$post_id = Blog::getMaximumId() + 1;
-		$post_url = Blog::getURL(Storychief::sluggify($command->payload['title']));
+		$post_id = $command->payload['external_id'];
+
+		// First get the post so we can fetch the last revision id
+
+		$post = Blog::get($post_id);
+
+		if ($post['title'] === $command->payload['title']) {
+			$post_url = $post['url'];
+		} else {
+			$post_url = Blog::getURL(Storychief::sluggify($command->payload['title']));
+		}
+
+
 		$item = [
 			'id'           => $post_id,
+			'revision_id'  => $post['revision_id'],
 			'title'        => $command->payload['title'],
 			'text'         => $command->payload['content'],
 			'introduction' => $command->payload['excerpt'],
-			'user_id'      => 1,
+			'status' 		   => $post['status'],
+			'language'		 => $post['language'],
+			'publish_on'	 => date("Y-m-d\ H:i:s", $post['publish_on']),
+			'edited_on'	   => BackendModel::getUTCDate(),
 		];
-		$meta = [
-			'url' => $post_url,
-		];
-		$tags = [];
+
 
 		// Category
 		if (isset($command->payload['category']['data']['name'])) {
@@ -70,27 +84,65 @@ final class PublishArticleHandler
 		}
 
 
+
+		// Authors
+		if (isset($command->payload['author']['data']['email']) && Users::existsEmail($command->payload['author']['data']['email'])) {
+			$author_id = Users::getIdByEmail($command->payload['author']['data']['email']);
+			$item['user_id'] = $author_id;
+		}
+
 		// Tags
+		$tags = [];
 		if (!empty($command->payload['tags']['data'])) {
 			foreach ($command->payload['tags']['data'] as $tag) {
 				$tags[] = $tag['name'];
 			}
 		}
 
+		// Meta Tags
+		$meta = [
+			'url' => $post_url,
+		];
 
-		// Author
-		if (isset($command->payload['author']['data']['email']) && Users::existsEmail($command->payload['author']['data']['email'])) {
-			$author_id = Users::getIdByEmail($command->payload['author']['data']['email']);
-			$item['user_id'] = $author_id;
+		if (!isset($meta['keywords'])) {
+			$meta['keywords'] = $item['title'];
+		}
+		if (!isset($meta['keywords_overwrite'])) {
+			$meta['keywords_overwrite'] = false;
+		}
+		if (!isset($meta['description'])) {
+			$meta['description'] = $item['title'];
+		}
+		if (!isset($meta['description_overwrite'])) {
+			$meta['description_overwrite'] = false;
+		}
+		if (!isset($meta['title'])) {
+			$meta['title'] = $item['title'];
+		}
+		if (!isset($meta['title_overwrite'])) {
+			$meta['title_overwrite'] = false;
+		}
+		if (!isset($meta['url_overwrite'])) {
+			$meta['url_overwrite'] = false;
+		}
+		if (!isset($meta['seo_index'])) {
+			$meta['seo_index'] = 'index';
+		}
+		if (!isset($meta['seo_follow'])) {
+			$meta['seo_follow'] = 'follow';
 		}
 
-		// Meta Tags
+		$item['meta_id'] = BackendModel::getContainer()->get('database')->insert('meta', $meta);
+
 		if (isset($command->payload['amphtml']) && !empty($command->payload['amphtml'])) {
 			$meta['custom'] = '<link rel="amphtml" href="' . $command->payload['amphtml'] . '" />';
 		}
 
-		// Insert
-		$revision_id = Blog::insertCompletePost($item, $meta, $tags);
+		$revision_id = Blog::update($item);
+
+		if (!empty($tags)) {
+			BackendTagsModel::saveTags($item['id'], implode(',', $tags), 'blog');
+		}
 
 		// Image
 		if (isset($command->payload['featured_image']['data']['url'])) {

@@ -4,11 +4,26 @@ services:
         arguments:
             - "@fork.settings"
         tags:
-            - { name: command_handler, handles: Frontend\Modules\Storychief\Command\PublishArticle }
+            - {
+                  name: command_handler,
+                  handles: Frontend\Modules\Storychief\Command\PublishArticle,
+              }
 
     storychief.handler.delete_article:
         class: Frontend\Modules\Storychief\Command\DeleteArticleHandler
         arguments:
             - "@fork.settings"
         tags:
-            - { name: command_handler, handles: Frontend\Modules\Storychief\Command\DeleteArticle }
+            - {
+                  name: command_handler,
+                  handles: Frontend\Modules\Storychief\Command\DeleteArticle,
+              }
+    storychief.handler.update_article:
+        class: Frontend\Modules\Storychief\Command\UpdateArticleHandler
+        arguments:
+            - "@fork.settings"
+        tags:
+            - {
+                  name: command_handler,
+                  handles: Frontend\Modules\Storychief\Command\UpdateArticle,
+              }

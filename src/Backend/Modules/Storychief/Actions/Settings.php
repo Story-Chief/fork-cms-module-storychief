@@ -12,12 +12,14 @@ use Backend\Core\Language\Language as BL;
  * This is the settings-action (default), it will be used to couple your Storychief
  * account
  */
-final class Settings extends BackendBaseActionEdit {
+final class Settings extends BackendBaseActionEdit
+{
 
 	/**
 	 * Execute the action
 	 */
-	public function execute() {
+	public function execute(): void
+	{
 		parent::execute();
 
 		$this->loadForm();
@@ -30,43 +32,45 @@ final class Settings extends BackendBaseActionEdit {
 	/**
 	 * Loads the settings form
 	 */
-	private function loadForm() {
+	private function loadForm(): void
+	{
 		// init settings form
-		$this->frm = new BackendForm('settings');
+		$this->form = new BackendForm('settings');
 
 		$languages = [];
 		foreach (BL::getActiveLanguages() as $code) {
 			$languages[$code] = BL::getLabel(mb_strtoupper($code), 'Core');
 		}
-		$this->frm->addPassword(
+		$this->form->addPassword(
 			'api_key',
-			$this->get('fork.settings')->get($this->URL->getModule(), 'api_key'),
+			$this->get('fork.settings')->get($this->getModule(), 'api_key'),
 			255
 		);
-		$this->frm->addDropdown(
+		$this->form->addDropdown(
 			'language',
 			$languages,
-			$this->get('fork.settings')->get($this->URL->getModule(), 'language')
+			$this->get('fork.settings')->get($this->getModule(), 'language')
 		);
 	}
 
 	/**
 	 * Validates the settings form
 	 */
-	private function validateForm() {
-		if ($this->frm->isSubmitted()) {
-			if ($this->frm->isCorrect()) {
+	private function validateForm()
+	{
+		if ($this->form->isSubmitted()) {
+			if ($this->form->isCorrect()) {
 				// set our settings
 				$this->get('fork.settings')->set(
-					$this->URL->getModule(),
+					$this->getModule(),
 					'api_key',
-					$this->frm->getField('api_key')->getValue()
+					$this->form->getField('api_key')->getValue()
 				);
 
 				$this->get('fork.settings')->set(
-					$this->URL->getModule(),
+					$this->getModule(),
 					'language',
-					$this->frm->getField('language')->getValue()
+					$this->form->getField('language')->getValue()
 				);
 
 				// redirect to the settings page

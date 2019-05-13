@@ -3,19 +3,25 @@
 namespace Frontend\Modules\Storychief\Actions;
 
 use Backend\Core\Engine\Model;
-use Frontend\Modules\Storychief\Command\DeleteArticle;
-use Frontend\Modules\Storychief\Command\PublishArticle;
 use Common\Exception\RedirectException;
-use Frontend\Core\Engine\Base\Block as FrontendBaseBlock;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Frontend\Modules\Storychief\Command\DeleteArticle;
+use Frontend\Modules\Storychief\Command\UpdateArticle;
+use Frontend\Modules\Storychief\Command\PublishArticle;
+use Frontend\Core\Engine\Base\Block as FrontendBaseBlock;
 
-class Index extends FrontendBaseBlock {
+class Index extends FrontendBaseBlock
+{
+
 
 	/**
 	 * Execute the action
 	 */
-	public function execute() {
+	public function execute(): void
+	{
+		parent::execute();
+
 		$request = $this->getParsedRequest();
 		$commandBus = Model::get('command_bus');
 
@@ -32,6 +38,9 @@ class Index extends FrontendBaseBlock {
 			case 'delete':
 				$commandBus->handle(new DeleteArticle($request->request->get('data')));
 				break;
+			case 'update':
+				$commandBus->handle(new UpdateArticle($request->request->get('data')));
+				break;
 		}
 
 		throw new RedirectException('', new JsonResponse(null, 200));
@@ -40,8 +49,9 @@ class Index extends FrontendBaseBlock {
 	/**
 	 * @return Request
 	 */
-	protected function getParsedRequest() {
-		$request = $this->get('request');
+	protected function getParsedRequest()
+	{
+		$request = $this->getRequest();
 		if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
 			$data = json_decode($request->getContent(), true);
 			$request->request->replace(is_array($data) ? $data : array());
@@ -56,7 +66,8 @@ class Index extends FrontendBaseBlock {
 	 * @param  Request $request
 	 * @return bool
 	 */
-	protected function isValidRequest(Request $request) {
+	protected function isValidRequest(Request $request)
+	{
 		if (!$request->isMethod('POST')) return false;
 		$payload = $request->request->all();
 
@@ -64,6 +75,7 @@ class Index extends FrontendBaseBlock {
 			$givenMac = $payload['meta']['mac'];
 			unset($payload['meta']['mac']);
 			$calcMac = hash_hmac('sha256', json_encode($payload), $this->get('fork.settings')->get('Storychief', 'api_key'));
+
 
 			return hash_equals($givenMac, $calcMac);
 		}
@@ -76,7 +88,8 @@ class Index extends FrontendBaseBlock {
 	 *
 	 * @param array $pageIds
 	 */
-	protected function updateSiteHtmlHeader(array $pageIds) {
+	protected function updateSiteHtmlHeader(array $pageIds)
+	{
 		$regex = '/<meta\s+property="fb:pages"\s+content=".*"\s*\/>/';
 		$matches = [];
 		$haystack = $this->get('fork.settings')->get('Core', 'site_html_header');
