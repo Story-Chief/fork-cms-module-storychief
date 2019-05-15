@@ -1,0 +1,25 @@
+{
+  "name": "storychief/fork-cms-module-storychief",
+  "description": "A module to integrate StoryChief with Forkcms",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "Fork CMS",
+    "Fork",
+    "CMS",
+    "plugin",
+    "StoryChiefs"
+  ],
+  "homepage": "http://storychief.io",
+  "authors": [
+    {
+      "name": "Gregory Claeyssens",
+      "email": "gregory@storychief.io"
+    },
+    {
+      "name": "Gustavo Caetano",
+      "email": "souljacker@gmail.com"
+    }
+  ],
+  "require": {}
+}
